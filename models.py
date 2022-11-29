@@ -1,35 +1,29 @@
-from sqlalchemy import (
-    Column,
-    ForeignKey,
-    Integer,
-    String,
-    Boolean
-)
-from sqlalchemy.orm import relationship
+from flask_sqlalchemy import SQLAlchemy
 
-from database import Base
+db = SQLAlchemy()
 
-class User(Base):
+class User(db.Model):
     __tablename__ = 'users'
-    id = Column(Integer, primary_key=True)
-    full_name = Column(String(50), unique=True, nullable=False)
-    email = Column(String(120), unique=True, nullable=False)
-    is_admin = Column(Boolean, default=False)
-    is_staff = Column(Boolean, default=False)
-    is_active = Column(Boolean, default=True)
+    id = db.Column(db.Integer, primary_key=True)
+    full_name = db.Column(db.String(50), unique=True, nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    is_admin = db.Column(db.Boolean, default=False)
+    is_staff = db.Column(db.Boolean, default=False)
+    is_active = db.Column(db.Boolean, default=True)
+    orders = db.relationship('Order', backref='user')
 
     def __repr__(self):
         return f'<User {self.full_name}>'
     
     
-class Order(Base):
+class Order(db.Model):
     __tablename__ = 'orders'
-    id = Column(Integer, primary_key=True)
-    name = Column(String(250), nullable=False)
-    amount = Column(Integer, nullable=False)
-    user_id = Column(Integer, ForeignKey("users.id"))
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(250), nullable=False)
+    amount = db.Column(db.Integer, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
 
-    user = relationship("User", back_populates="orders")
+    user = db.relationship("User", back_populates="orders")
     
     def __repr__(self):
         return f'<User {self.full_name}>'

@@ -1,9 +1,15 @@
 from flask import Flask
-from database import db_session
+from flask_migrate import Migrate
+
+from models import db
+from main import main as main_blueprint
+from auth import auth as auth_blueprint
 
 app = Flask(__name__)
+app.config.from_object('config')
 
-@app.teardown_appcontext
-def shutdown_session(exception=None):
-    db_session.remove()
-    
+db.init_app(app)
+Migrate(app, db)
+
+app.register_blueprint(main_blueprint)
+app.register_blueprint(auth_blueprint)
