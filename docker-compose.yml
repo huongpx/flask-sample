@@ -1,0 +1,30 @@
+version: "3.7"
+
+volumes:
+  postgres_data: {}
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: flask-sample:v1
+    container_name: flask-sample
+    env_file:
+      - docker-compose.env
+    restart: unless-stopped
+    depends_on:
+      - database
+    volumes:
+      - ./:/app
+
+  database:
+    image: postgres:12-alpine
+    env_file:
+      - docker-compose.env
+    ports:
+      - 5433:5432
+    restart: unless-stopped
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./postgres_data:/data
