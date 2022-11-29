@@ -9,7 +9,12 @@ def index():
 
 @main.route('/dashboard')
 def dashboard():
-    return render_template('main/dashboard.html')
+    legend = 'Monthly Data'
+    months = ["January", "February", "March", "April", "May", "June", "July", "August", 
+              "September", "October", "November", "December"
+              ]
+    values = [10, 9, 8, 7, 6, 4, 7, 8, 9, 10, 11, 12]
+    return render_template('main/dashboard.html', values=values, months=months, legend=legend)
 
 
 @main.route('/users')
